@@ -4,6 +4,11 @@
 
 <h1>Mastermind Wordle</h1>
 
+<select id="language">
+	<option value = "cro">Croatian</option>
+	<option value = "eng">English</option>
+</select>
+
 <p>start new game:
 <button type="button" onclick="random_word()">Go!</button>
 </p>
@@ -940,15 +945,27 @@ const word_list_eng = [
 "zooks", "zooms", "zoons", "zooty", "zoril", "zoris", "zowie", "zymes"
 ];
 
+function lang() {
+	var select = document.getElementById('language');
+	return select.options[select.selectedIndex].value;
+}
+
+function word_list() {
+	return lang() == "cro" ? word_list_cro : word_list_eng;
+}
+
 function get_word(idx) {
-	return word_list_cro[idx];
+	return word_list()[idx];
 }
 
 function word_cnt() {
-	return word_list_cro.length;
+	return word_list().length;
 }
 
 function word_len(w) {
+	if (lang() != "cro")
+		return w.length;
+		
 	w = w.toLowerCase();
 	ret = 0;
 	for (i = 0; i < w.length - 1; ++i, ++ret) {
@@ -963,10 +980,11 @@ function word_len(w) {
 }
 
 function to_char_list(w) {
+	is_cro = lang() == "cro";
 	w = w.toUpperCase();
 	ret = [];
 	for (i = 0; i < w.length; ++i) {
-		if (i < w.length - 1 && (
+		if (is_cro && i < w.length - 1 && (
 		    (w[i] == 'L' && w[i + 1] == 'J') ||
 		    (w[i] == 'N' && w[i + 1] == 'J') ||
 			(w[i] == 'D' && w[i + 1] == 'Ž')))
